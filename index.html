@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>身心靈指壓舒壓</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="勾選124項身體不適，產生穴位指壓處方、穴位位置圖與跟著按的呼吸節拍器。">
+<meta property="og:title" content="身心靈指壓舒壓">
+<meta property="og:description" content="124項症狀取穴・穴位位置圖・指壓節拍器">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232C7A67'/%3E%3Ccircle cx='32' cy='32' r='10' fill='%23F6E5DB'/%3E%3Ccircle cx='32' cy='32' r='4' fill='%23B4603A'/%3E%3C/svg%3E">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font-size:14px;-webkit-text-size-adjust:100%}img{max-width:100%}[hidden]{display:none!important}</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+/* Layout: 青瓷底的「取穴簿」— 上方選症狀，下方展開指壓處方、人形穴位圖與逐穴卡片，底部浮動操作列 */
+:root{
+  --bg:#ECF1EE; --card:#FFFFFF; --ink:#1D2926; --muted:#5B6B66; --line:#D2DCD7;
+  --jade:#2C7A67; --jade-soft:#DCEBE5; --ochre:#B4603A; --ochre-soft:#F6E5DB;
+  --warn:#A8322A; --warn-soft:#F8E1DE; --caution:#8A6410; --caution-soft:#F6EDD3;
+  --figure:#C9D6D0;
+  --f-display:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#111816; --card:#19221F; --ink:#E1EAE6; --muted:#97A8A2; --line:#2C3934;
+  --jade:#6BC3AA; --jade-soft:#1E3530; --ochre:#E39066; --ochre-soft:#3A271E;
+  --warn:#F08A80; --warn-soft:#3B1E1B; --caution:#E1BE62; --caution-soft:#352D16;
+  --figure:#33433D; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111816; --card:#19221F; --ink:#E1EAE6; --muted:#97A8A2; --line:#2C3934;
+  --jade:#6BC3AA; --jade-soft:#1E3530; --ochre:#E39066; --ochre-soft:#3A271E;
+  --warn:#F08A80; --warn-soft:#3B1E1B; --caution:#E1BE62; --caution-soft:#352D16;
+  --figure:#33433D; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.7;padding-inline:16px;padding-block:0 110px}
+.wrap{max-width:1080px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:2px solid var(--jade);outline-offset:2px}
+
+header.top{padding-block:28px 18px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:end}
+.eyebrow{font-size:12px;letter-spacing:.2em;color:var(--jade);font-weight:700}
+h1{font-size:clamp(28px,5vw,42px);font-weight:900;letter-spacing:.04em;line-height:1.2}
+h1 span{color:var(--ochre)}
+.lede{color:var(--muted);max-width:60ch;margin:8px 0 0}
+.seal{width:76px;height:76px;border:2px solid var(--ochre);color:var(--ochre);border-radius:6px;display:grid;place-items:center;font-family:var(--f-display);font-weight:900;font-size:20px;line-height:1.1;text-align:center;transform:rotate(-4deg)}
+@media (max-width:520px){.seal{display:none}header.top{grid-template-columns:1fr}}
+
+.notice{font-size:13px;color:var(--muted);border-left:3px solid var(--line);padding:4px 0 4px 12px;margin:0 0 18px}
+
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px}
+.picker-head{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.picker-head h2{font-size:20px}
+.search{flex:1 1 220px;max-width:320px;display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--bg)}
+.search input{border:0;background:transparent;font:inherit;color:var(--ink);width:100%;outline:none}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;scrollbar-width:thin}
+.tab{flex:0 0 auto;border:1px solid var(--line);background:transparent;border-radius:999px;padding:4px 14px;font-size:14px;color:var(--muted)}
+.tab[aria-selected="true"]{background:var(--jade);border-color:var(--jade);color:var(--card)}
+.tab small{font-variant-numeric:tabular-nums;opacity:.75;margin-left:4px}
+.preg{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);user-select:none}
+.preg input{accent-color:var(--ochre);width:18px;height:18px}
+
+.chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px}
+.chip{display:flex;align-items:baseline;gap:6px;text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:7px 10px;font-size:14px;line-height:1.35;min-width:0}
+.chip .n{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:22px}
+.chip:hover{border-color:var(--jade)}
+.chip[aria-pressed="true"]{background:var(--jade-soft);border-color:var(--jade);color:var(--ink);font-weight:700}
+.chip[aria-pressed="true"] .n{color:var(--jade)}
+.chip .flag{margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--warn);flex:0 0 auto;align-self:center}
+.empty-search{color:var(--muted);padding:12px 0}
+
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--card);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}
+.bar .in{max-width:1080px;margin:0 auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.bar .sel{flex:1 1 200px;min-width:0;font-size:14px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .sel b{color:var(--ink);font-variant-numeric:tabular-nums}
+.btn{border:1px solid var(--line);background:transparent;border-radius:8px;padding:8px 16px;font-weight:500}
+.btn.primary{background:var(--ochre);border-color:var(--ochre);color:var(--card);font-weight:700}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+#results{margin-top:28px;display:grid;gap:22px}
+.rx{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px}
+@media (max-width:780px){.rx{grid-template-columns:1fr}}
+.rx h2{font-size:22px;margin-bottom:4px}
+.rx .sub{color:var(--muted);font-size:13px;margin:0 0 14px}
+.rx-list{display:flex;flex-wrap:wrap;gap:8px}
+.pt-chip{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:6px 10px;font-size:14px;display:flex;gap:6px;align-items:center}
+.pt-chip b{font-family:var(--f-display)}
+.pt-chip .cnt{font-size:11px;background:var(--ochre-soft);color:var(--ochre);border-radius:999px;padding:0 7px;font-variant-numeric:tabular-nums}
+.pt-chip.avoid{opacity:.5;text-decoration:line-through}
+.figure-box{background:var(--bg);border-radius:10px;padding:10px}
+.figure-box svg{width:100%;height:auto;display:block}
+.figure-box .cap{font-size:12px;color:var(--muted);text-align:center;margin-top:4px}
+.rx-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+
+.alert{border-radius:10px;padding:12px 14px;font-size:14px}
+.alert.urgent{background:var(--warn-soft);color:var(--warn);border:1px solid var(--warn)}
+.alert.medical{background:var(--caution-soft);color:var(--caution)}
+.alert.preg{background:var(--ochre-soft);color:var(--ochre)}
+.alert b{font-weight:700}
+.alert ul{margin:6px 0 0;padding-left:20px}
+
+.sym{display:grid;gap:12px}
+.sym-head{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:8px}
+.sym-head h3{font-size:22px}
+.sym-head .num{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.sym-head .cat{font-size:12px;color:var(--jade);border:1px solid var(--jade);border-radius:999px;padding:0 8px}
+.mind{font-family:var(--f-display);color:var(--muted);font-size:14px;margin:0}
+.mind::before{content:"心　";color:var(--ochre);font-weight:700}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,400px),1fr));gap:12px}
+.pt{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;grid-template-columns:130px minmax(0,1fr);gap:14px;align-items:start;min-width:0}
+.pt-body{display:grid;gap:6px;min-width:0}
+.pt-fig{margin:0;background:var(--bg);border-radius:8px;padding:6px 4px 4px}
+.pt-fig svg,.m-fig svg{width:100%;height:auto;display:block}
+.pt-fig figcaption{font-size:11px;color:var(--muted);text-align:center;line-height:1.4}
+@media (max-width:420px){.pt{grid-template-columns:104px minmax(0,1fr);gap:10px}}
+.fb{fill:var(--figure)}
+.fl{fill:none;stroke:var(--muted);stroke-width:1.3;opacity:.7}
+.dot{fill:var(--warn);stroke:var(--card);stroke-width:1.5}
+.pulse{fill:var(--warn);opacity:.35;transform-box:fill-box;transform-origin:center;animation:pulse 1.6s ease-out infinite}
+@keyframes pulse{from{transform:scale(1);opacity:.45}to{transform:scale(2.6);opacity:0}}
+@media (prefers-reduced-motion:reduce){.pulse{animation:none}}
+.plbl{font-family:var(--f-display);font-weight:900;font-size:19px;fill:var(--warn);paint-order:stroke;stroke:var(--bg);stroke-width:4px;stroke-linejoin:round}
+.side{font-size:12px;fill:var(--muted)}
+.m-fig{width:180px;margin:0 auto;background:var(--bg);border-radius:10px;padding:6px}
+.pt.avoid{opacity:.55}
+.pt-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.pt-top h4{font-family:var(--f-display);font-size:21px;margin:0;font-weight:700}
+.pt-top .code{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.pt-top .reg{margin-left:auto;font-size:12px;background:var(--jade-soft);color:var(--jade);border-radius:6px;padding:0 8px}
+.badge-avoid{font-size:12px;background:var(--ochre-soft);color:var(--ochre);border-radius:6px;padding:1px 8px;justify-self:start;font-weight:700}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:14px}
+dt{color:var(--ochre);font-weight:700;letter-spacing:.08em;font-size:13px;padding-top:1px}
+dd{margin:0;min-width:0}
+.pt .go{justify-self:start;margin-top:4px;border:1px solid var(--jade);color:var(--jade);background:transparent;border-radius:999px;padding:3px 14px;font-size:13px;font-weight:700}
+.pt .go:disabled{border-color:var(--line);color:var(--muted)}
+
+/* 指壓節拍器 */
+.modal{position:fixed;inset:0;z-index:40;background:color-mix(in srgb,var(--ink) 55%,transparent);display:grid;place-items:center;padding:16px}
+.dialog{background:var(--card);border-radius:14px;width:min(420px,100%);padding:22px;display:grid;gap:12px;text-align:center}
+.dialog h3{font-size:26px}
+.dialog .where{color:var(--muted);font-size:13px;margin:0}
+.dialog{max-height:calc(100% - 8px);overflow-y:auto}
+.ring{width:150px;height:150px;margin:6px auto;position:relative;display:grid;place-items:center}
+.ring .disc{position:absolute;inset:0;border-radius:50%;background:var(--jade-soft);border:2px solid var(--jade);transform:scale(.72);transition:transform 1s ease-in-out}
+.ring.press .disc{transform:scale(1);background:var(--ochre-soft);border-color:var(--ochre)}
+.ring .lbl{position:relative;font-family:var(--f-display);font-size:24px;font-weight:700}
+.ring .lbl small{display:block;font-family:var(--f-body);font-size:13px;color:var(--muted);font-weight:400}
+.meta{display:flex;justify-content:center;gap:18px;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.dialog .row{display:flex;gap:8px;justify-content:center}
+@media (prefers-reduced-motion:reduce){.ring .disc{transition:none}}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:8px;font-size:14px;z-index:50}
+footer{margin-top:36px;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">身 · 心 · 靈 ｜ 124 項症狀取穴</div>
+      <h1>身心靈<span>指壓</span>舒壓</h1>
+      <p class="lede">勾選身體的不適，系統整理出對應穴位、取穴位置與按壓手法，並以人形圖標出位置。按下「跟著按」，節拍器會帶著你按五秒、放兩秒，配合呼吸慢慢放鬆。</p>
+    </div>
+    <div class="seal">指壓<br>舒壓</div>
+  </header>
+  <p class="notice">本工具為居家保健參考，不能取代醫師診斷與治療。症狀持續、加重或伴隨劇痛、發燒、出血時，請儘速就醫。皮膚有傷口、發炎、靜脈曲張處，以及飯後一小時內、酒後，請勿按壓。</p>
+
+  <section class="panel" aria-labelledby="pick-title">
+    <div class="picker-head">
+      <h2 id="pick-title">選取症狀</h2>
+      <label class="search"><span aria-hidden="true">⌕</span><input id="q" type="search" placeholder="搜尋症狀，例如：頭痛"></label>
+      <label class="preg"><input type="checkbox" id="preg">我正在懷孕（自動標示孕期避免穴位）</label>
+    </div>
+    <div class="tabs" id="tabs" role="tablist"></div>
+    <div class="chips" id="chips"></div>
+  </section>
+
+  <div id="results" aria-live="polite"></div>
+
+  <footer>穴位定位以「寸」計：拇指指間關節的寬度約為 1 寸，食指至小指四指併攏的寬度約為 3 寸（以本人手指為準）。紅點標記的症狀屬須就醫評估的狀況，指壓僅能作為輔助放鬆。</footer>
+</div>
+
+<div class="bar">
+  <div class="in">
+    <div class="sel" id="selText">尚未選取症狀</div>
+    <button class="btn" id="reset">重新設定</button>
+    <button class="btn primary" id="show">結果顯示</button>
+  </div>
+</div>
+
+<div class="modal" id="modal" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="m-name">
+    <h3 id="m-name">穴位</h3>
+    <div class="m-fig" id="m-fig"></div>
+    <p class="where" id="m-where"></p>
+    <div class="ring" id="ring"><div class="disc"></div><div class="lbl" id="m-phase">準備<small>按下開始</small></div></div>
+    <div class="meta"><span id="m-count">第 0 / 10 回</span><span id="m-sec">0 秒</span></div>
+    <div class="row">
+      <button class="btn primary" id="m-start">開始</button>
+      <button class="btn" id="m-close">關閉</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---------- 穴位資料庫 [代碼, 經絡, 部位區, 取穴, 手法, 主治, 連帶療效, 孕期避免(1)] ----------
+const M={
+ std:"以拇指指腹垂直按壓，按 5 秒、放 2 秒，重複 8–10 回，力道以微痠脹為度。",
+ soft:"以中指或食指指腹輕柔點按，或小圈揉動約 1 分鐘，力道宜輕。",
+ eye:"閉上眼睛，以指腹輕壓骨緣，不可壓迫眼球；每次 3–5 秒，重複 5 回。",
+ pinch:"以拇指指甲緣輕掐，掐 3 秒放 2 秒，重複 5–8 回。",
+ back:"位於背部，請家人以拇指或掌根按揉 1–2 分鐘；獨自操作可用按摩球靠牆滾壓。",
+ rub:"以拇指或手掌來回搓揉至溫熱，約 1–2 分鐘。",
+ abd:"仰臥放鬆，呼氣時以指腹緩慢下壓，吸氣時放鬆，約 1 分鐘；飯後一小時內不宜。",
+ deep:"肌肉較厚，可用拇指或握拳以指節深壓，每次 5–8 秒，重複 5 回。",
+ throat:"以中指指腹朝內下方輕輕點按，每次 3 秒，重複 5 回，力道務必輕。"
+};
+const P={
+"百會":["GV20","督脈","H","兩耳尖往上連線，與頭頂正中線的交點。","soft","頭痛、暈眩、失眠、健忘","提神醒腦、掉髮調理、穩定情緒"],
+"四神聰":["EX-HN1","經外奇穴","H","百會穴前、後、左、右各 1 寸，共四穴。","soft","失眠、健忘、頭暈","安神、改善注意力"],
+"神庭":["GV24","督脈","H","前髮際正中直上 0.5 寸。","soft","失眠、頭暈","安神定志"],
+"上星":["GV23","督脈","H","前髮際正中直上 1 寸。","soft","鼻塞、鼻炎、前額痛","眼睛疲勞"],
+"印堂":["EX-HN3","經外奇穴","H","兩眉頭連線的中點。","soft","鼻塞、頭痛、失眠","安神、舒緩眉心緊繃"],
+"頭維":["ST8","足陽明胃經","H","額角髮際直上 0.5 寸。","soft","偏頭痛、掉髮","眼睛脹痛"],
+"陽白":["GB14","足少陽膽經","H","瞳孔直上，眉毛上緣 1 寸。","soft","面神經麻痺、前額痛","眼皮沉重、抬頭紋"],
+"攢竹":["BL2","足太陽膀胱經","H","眉頭內側凹陷處。","eye","眼痛、頭痛、目赤","眼袋、眼睛疲勞"],
+"絲竹空":["TE23","手少陽三焦經","H","眉梢末端凹陷處。","soft","偏頭痛、眼痛","魚尾紋"],
+"太陽":["EX-HN5","經外奇穴","H","眉梢與外眼角連線中點，向後約一橫指的凹陷。","soft","頭痛、眼痛、目赤","牙痛、面部放鬆"],
+"睛明":["BL1","足太陽膀胱經","H","內眼角稍上方的凹陷。","eye","眼痛、視物不清、目赤","眼睛乾澀疲勞"],
+"承泣":["ST1","足陽明胃經","H","瞳孔直下，眼球與下眼眶骨緣之間。","eye","眼袋、眼睛疲勞","黑眼圈"],
+"四白":["ST2","足陽明胃經","H","瞳孔直下，下眼眶骨緣下方的凹陷。","soft","視物不清、眼袋、面神經麻痺","淡化斑點、面部氣色"],
+"瞳子髎":["GB1","足少陽膽經","H","外眼角外側約 0.5 寸的凹陷。","eye","眼病、眼睛疲勞","魚尾紋、眼袋"],
+"迎香":["LI20","手陽明大腸經","H","鼻翼外緣中點旁，鼻唇溝中。","soft","鼻塞、鼻炎","口眼歪斜、粉刺"],
+"顴髎":["SI18","手太陽小腸經","H","外眼角直下，顴骨下緣凹陷處。","soft","面神經麻痺、三叉神經痛","瘦臉、提拉臉部線條"],
+"地倉":["ST4","足陽明胃經","H","嘴角外側約 0.4 寸。","soft","口眼歪斜、嘴唇乾","流口水、嘴角紋"],
+"頰車":["ST6","足陽明胃經","H","下頜角前上方，用力咬牙時肌肉隆起處。","std","牙痛、口眼歪斜、三叉神經痛","瘦臉、咀嚼肌放鬆"],
+"下關":["ST7","足陽明胃經","H","耳前顴弓下方凹陷，閉口時可觸及。","std","牙痛、三叉神經痛","耳鳴、顳顎關節緊繃"],
+"聽宮":["SI19","手太陽小腸經","H","耳屏正前方，張口時出現的凹陷。","soft","耳鳴、耳聾、中耳炎","牙痛"],
+"翳風":["TE17","手少陽三焦經","H","耳垂後方，乳突與下頜角之間的凹陷。","soft","耳鳴、耳聾、面神經麻痺","耳下腺腫痛、打嗝"],
+"人中":["GV26","督脈","H","鼻唇溝上 1/3 與中 1/3 交界處（水溝穴）。","pinch","昏厥急救輔助、癲狂","急性腰扭傷"],
+"承漿":["CV24","任脈","H","下唇下方，頦唇溝正中凹陷。","soft","口眼歪斜、嘴唇乾","牙齦腫痛"],
+"安眠":["EX","經外奇穴","N","耳後翳風穴與風池穴連線的中點。","soft","失眠、多夢","頭暈、心悸"],
+"風池":["GB20","足少陽膽經","N","後頸髮際，兩條大筋外側的凹陷，與耳垂約同高。","std","頭痛、暈眩、頸項僵硬、感冒","眼睛疲勞、耳鳴、鼻塞"],
+"天柱":["BL10","足太陽膀胱經","N","後髮際正中旁開約 1.3 寸，大筋外緣凹陷。","std","頸項僵硬、後頭痛","眼睛疲勞、肩頸痠"],
+"大椎":["GV14","督脈","N","低頭時頸後最突出骨頭的下方凹陷。","rub","發熱、感冒、頸項僵硬","咳嗽、提振陽氣"],
+"定喘":["EX-B1","經外奇穴","N","大椎穴左右旁開 0.5 寸。","rub","哮喘、咳嗽","肩背痠"],
+"廉泉":["CV23","任脈","T","喉結上方，舌骨上緣凹陷處。","throat","失音、口乾","吞嚥不順"],
+"天突":["CV22","任脈","T","胸骨上窩正中央凹陷。","throat","咳嗽、哮喘、咽喉腫痛、失音","喉嚨異物感"],
+"膻中":["CV17","任脈","C","兩乳頭連線與胸骨正中線的交點。","soft","胸悶、心悸、哮喘","乳房脹痛、舒緩鬱悶"],
+"乳根":["ST18","足陽明胃經","C","乳頭直下，第 5 肋間隙。","soft","乳房脹痛、乳腺不適","胸悶"],
+"期門":["LR14","足厥陰肝經","C","乳頭直下，第 6 肋間隙。","soft","胸脅脹痛、肝氣鬱結","乳房脹痛、消化不良"],
+"中脘":["CV12","任脈","A","肚臍直上 4 寸（胸骨下端與肚臍連線中點）。","abd","胃痛、噁心、嘔吐、食慾不振","腹脹、消化不良",1],
+"水分":["CV9","任脈","A","肚臍直上 1 寸。","abd","水腫、腹脹","小便不利",1],
+"天樞":["ST25","足陽明胃經","A","肚臍左右旁開 2 寸（約三指寬）。","abd","腹瀉、便秘、腹痛","腹部贅肉、經期不適",1],
+"大橫":["SP15","足太陰脾經","A","肚臍左右旁開 4 寸。","abd","便秘、腹脹","腰腹贅肉",1],
+"氣海":["CV6","任脈","A","肚臍直下 1.5 寸。","abd","精力減退、腹瀉、遺尿","手腳冰冷、月經不調",1],
+"關元":["CV4","任脈","A","肚臍直下 3 寸（四指寬）。","abd","尿多、遺尿、經痛、精力減退","白帶、手腳冰冷",1],
+"中極":["CV3","任脈","A","肚臍直下 4 寸，恥骨上方。","abd","尿少、膀胱炎、尿路感染","月經不調、白帶",1],
+"歸來":["ST29","足陽明胃經","A","肚臍下 4 寸，再旁開 2 寸。","abd","疝氣、月經不調","白帶、小腹冷痛",1],
+"帶脈":["GB26","足少陽膽經","A","側腹，第 11 肋骨尖端直下與肚臍水平線交點。","std","白帶、月經不調","腰腹贅肉、腰痛",1],
+"肩井":["GB21","足少陽膽經","S","大椎穴與肩峰連線的中點，肩上最高處。","std","肩頸痛、肩背痛、落枕","乳腺不適、頭痛",1],
+"肩髃":["LI15","手陽明大腸經","S","手臂平舉時，肩峰前下方的凹陷。","std","肩關節炎、手臂抬舉困難","半身不遂輔助"],
+"肩髎":["TE14","手少陽三焦經","S","手臂平舉時，肩峰後下方的凹陷。","std","肩關節炎、肩痛","手臂痠"],
+"肩貞":["SI9","手太陽小腸經","S","手臂下垂，腋後紋頭直上 1 寸。","std","肩胛疼痛、肩關節痛","手臂麻"],
+"天宗":["SI11","手太陽小腸經","UB","肩胛骨中央的凹陷處。","back","肩胛疼痛、肩背痛","乳腺不適、胸悶"],
+"膏肓":["BL43","足太陽膀胱經","UB","第 4 胸椎棘突下，左右旁開 3 寸（肩胛骨內緣）。","back","肩背痛、背部僵硬","久咳、疲勞虛弱"],
+"肺俞":["BL13","足太陽膀胱經","UB","第 3 胸椎棘突下，左右旁開 1.5 寸。","back","咳嗽、哮喘、支氣管炎","盜汗、皮膚乾燥"],
+"心俞":["BL15","足太陽膀胱經","UB","第 5 胸椎棘突下，左右旁開 1.5 寸。","back","心悸、失眠、健忘","多夢、心煩"],
+"至陽":["GV9","督脈","UB","第 7 胸椎棘突下（約與肩胛骨下角同高）。","back","黃疸、胸悶","背痛、胃脘不適"],
+"膈俞":["BL17","足太陽膀胱經","UB","第 7 胸椎棘突下，左右旁開 1.5 寸。","back","貧血、嘔吐、飲食不下","皮膚癢、打嗝"],
+"肝俞":["BL18","足太陽膀胱經","UB","第 9 胸椎棘突下，左右旁開 1.5 寸。","back","黃疸、眼病、肝機能調理","脅痛、易怒"],
+"脾俞":["BL20","足太陽膀胱經","LB","第 11 胸椎棘突下，左右旁開 1.5 寸。","back","食慾不振、腹瀉、水腫","貧血、疲倦"],
+"腎俞":["BL23","足太陽膀胱經","LB","第 2 腰椎棘突下旁開 1.5 寸，約與肚臍同高。","rub","腰痛、耳鳴、遺尿、精力減退","白髮掉髮、手腳冰冷"],
+"命門":["GV4","督脈","LB","第 2 腰椎棘突下，背後與肚臍相對處。","rub","腰痛、精力減退","腳部冰冷、遺尿"],
+"大腸俞":["BL25","足太陽膀胱經","LB","第 4 腰椎棘突下（約與骨盆上緣同高），旁開 1.5 寸。","back","腰痛、便秘、腹瀉","下肢痠"],
+"腰眼":["EX-B7","經外奇穴","LB","第 4 腰椎棘突下，左右旁開約 3.5 寸的凹陷。","rub","腰痛、腰部痠軟","疲勞"],
+"次髎":["BL32","足太陽膀胱經","LB","薦骨第 2 骶後孔中（臀溝上方骨面凹陷）。","rub","經痛、泌尿不適","腰骶痠痛",1],
+"環跳":["GB30","足少陽膽經","G","側臥屈腿，股骨大轉子最高點與薦骨裂孔連線外 1/3 處。","deep","坐骨神經痛、下肢麻痺","腰臀痠痛"],
+"承扶":["BL36","足太陽膀胱經","G","臀部下方橫紋的中點。","deep","坐骨神經痛","腰腿痛、便秘"],
+"風市":["GB31","足少陽膽經","G","直立垂手，大腿外側中指尖所及處。","deep","下肢麻痺、皮膚癢","腳腿痠"],
+"曲池":["LI11","手陽明大腸經","AO","屈肘，肘橫紋外側端與骨突之間的凹陷。","std","發熱、高血壓、皮膚癢、肘痛","咽喉腫痛、青春痘"],
+"手三里":["LI10","手陽明大腸經","AO","曲池穴往手腕方向 2 寸。","std","肘臂疼痛、手臂麻","腹痛、牙痛"],
+"支溝":["TE6","手少陽三焦經","AO","手背腕橫紋中央往上 3 寸，兩骨之間。","std","便秘、脅肋痛","耳鳴"],
+"外關":["TE5","手少陽三焦經","AO","手背腕橫紋中央往上 2 寸，兩骨之間。","std","感冒發熱、耳鳴、頭痛","肘臂痛、手腕痛"],
+"尺澤":["LU5","手太陰肺經","AI","肘橫紋上，肱二頭肌腱外側（拇指側）凹陷。","std","咳嗽、咽喉痛","肘痛、氣喘"],
+"郄門":["PC4","手厥陰心包經","AI","腕橫紋往上 5 寸，兩條筋之間。","std","心痛、心悸","胸悶、焦慮"],
+"內關":["PC6","手厥陰心包經","AI","腕橫紋往上 2 寸（三指寬），兩條筋之間。","std","噁心、嘔吐、心悸、胸悶","暈車、失眠、緊張"],
+"列缺":["LU7","手太陰肺經","AI","兩手虎口交叉，食指尖落在腕上橈骨上方的小凹陷。","std","咳嗽、頭頸痛、落枕","咽喉痛"],
+"陰郄":["HT6","手少陰心經","AI","神門穴往上 0.5 寸。","std","盜汗、心悸","心痛"],
+"神門":["HT7","手少陰心經","AI","腕橫紋小指側末端，筋的內側凹陷。","std","失眠、心煩、健忘、心悸","多夢、焦慮"],
+"大陵":["PC7","手厥陰心包經","AI","腕橫紋正中央，兩筋之間。","std","口臭、心煩、手腕痛","胸悶"],
+"太淵":["LU9","手太陰肺經","AI","腕橫紋拇指側，脈搏跳動處。","soft","咳嗽、哮喘","手腕痛"],
+"勞宮":["PC8","手厥陰心包經","HP","握拳時中指尖點到的掌心處。","std","心煩、口臭","手汗、口乾、緊張"],
+"魚際":["LU10","手太陰肺經","HP","拇指根部，第 1 掌骨中點的掌面與手背交界。","std","咽喉腫痛、失音、咳嗽","發熱"],
+"少商":["LU11","手太陰肺經","HP","拇指外側，指甲角旁約 0.1 寸。","pinch","咽喉腫痛、扁桃腺炎","發熱"],
+"少澤":["SI1","手太陽小腸經","HB","小指外側，指甲角旁約 0.1 寸。","pinch","乳腺炎、乳汁不暢","頭痛、咽喉痛"],
+"合谷":["LI4","手陽明大腸經","HB","手背虎口，第 1、2 掌骨之間，靠近第 2 掌骨中點。","std","頭痛、牙痛、感冒、面部不適","鼻塞、經痛、青春痘",1],
+"陽溪":["LI5","手陽明大腸經","HB","拇指往上翹時，腕背拇指側兩條筋之間的凹陷。","std","手腕疼痛","頭痛、牙痛"],
+"陽池":["TE4","手少陽三焦經","HB","手背腕橫紋上，伸指肌腱小指側的凹陷。","std","手腕痛、手腳冰冷","口渴、糖尿病調理輔助"],
+"中渚":["TE3","手少陽三焦經","HB","手背第 4、5 掌骨之間，掌指關節後方凹陷。","std","耳鳴、耳聾","肩背痛、手指屈伸不利"],
+"後溪":["SI3","手太陽小腸經","HB","握拳，小指掌指關節後方橫紋頭。","std","落枕、頸項僵硬、肩背痛","腰痛、眼睛疲勞"],
+"落枕穴":["EX-UE8","經外奇穴","HB","手背第 2、3 掌骨之間，掌指關節後約 0.5 寸。","std","落枕、頸部轉動困難","肩痛"],
+"腰痛點":["EX-UE7","經外奇穴","HB","手背第 2、3 及第 4、5 掌骨之間，腕橫紋與掌指關節中點，一手兩穴。","std","急性腰扭傷、腰痛","手背疼痛"],
+"鶴頂":["EX-LE2","經外奇穴","K","膝蓋骨上緣正中的凹陷處。","std","膝關節炎、膝痛","腿無力"],
+"梁丘":["ST34","足陽明胃經","K","屈膝，膝蓋骨外上緣往上 2 寸。","std","急性胃痛、膝痛","乳腺炎輔助"],
+"血海":["SP10","足太陰脾經","K","屈膝，膝蓋骨內上緣往上 2 寸的肌肉隆起處。","std","月經不調、皮膚癢、膝痛","貧血、氣色暗沉"],
+"犢鼻":["ST35","足陽明胃經","K","屈膝，膝蓋骨下方外側的凹陷（外膝眼）。","soft","膝關節炎、膝痛","膝部無力"],
+"陽陵泉":["GB34","足少陽膽經","K","小腿外側，腓骨頭前下方的凹陷。","std","膝痛、抽筋、下肢麻痺","肩痛、脅肋痛"],
+"陰陵泉":["SP9","足太陰脾經","K","小腿內側，脛骨內側髁下緣的凹陷。","std","水腫、尿少、腹瀉、膝痛","白帶、腹脹"],
+"委中":["BL40","足太陽膀胱經","KB","膝蓋後方膕窩橫紋的中點。","soft","腰痛、坐骨神經痛、下肢麻痺","背部僵硬、皮膚疹"],
+"足三里":["ST36","足陽明胃經","LF","外膝眼往下 3 寸（四指寬），脛骨外側一橫指。","std","胃痛、消化不良、疲倦","增強體力、腳腿痠、氣色"],
+"上巨虛":["ST37","足陽明胃經","LF","足三里往下 3 寸。","std","腹瀉、痢疾、便秘","腸鳴腹痛"],
+"豐隆":["ST40","足陽明胃經","LF","外踝尖往上 8 寸，脛骨前緣外側二橫指。","std","痰多、咳嗽、暈眩","高血脂、肥胖調理"],
+"地機":["SP8","足太陰脾經","LF","陰陵泉往下 3 寸，脛骨內側緣後方。","std","經痛、月經不調","腹脹、水腫",1],
+"蠡溝":["LR5","足厥陰肝經","LF","內踝尖往上 5 寸，脛骨內側面中央。","std","陰部痛癢、白帶","月經不調"],
+"三陰交":["SP6","足太陰脾經","LF","內踝尖往上 3 寸（四指寬），脛骨內側緣後方。","std","月經不調、經痛、失眠、泌尿不適","更年期不適、皮膚氣色",1],
+"懸鐘":["GB39","足少陽膽經","LF","外踝尖往上 3 寸，腓骨前緣。","std","頸項僵硬、落枕、下肢麻痺","腳氣、腳腿痠"],
+"承山":["BL57","足太陽膀胱經","CB","小腿肚下方，用力踮腳時肌肉出現的人字形凹陷。","deep","小腿抽筋、腳腿痛","便秘、腰背痛"],
+"復溜":["KI7","足少陰腎經","FT","太溪穴往上 2 寸，跟腱前方。","std","盜汗、熱病汗不出、水腫","腳腿無力"],
+"太溪":["KI3","足少陰腎經","FT","內踝尖與跟腱之間的凹陷。","std","耳鳴、失眠、腰痛、牙痛","咽喉乾、手腳冰冷"],
+"照海":["KI6","足少陰腎經","FT","內踝尖正下方的凹陷。","std","咽喉乾痛、失眠","月經不調、失音"],
+"崑崙":["BL60","足太陽膀胱經","FT","外踝尖與跟腱之間的凹陷。","std","足踝痛、腰痛、後頭痛","肩背僵硬",1],
+"申脈":["BL62","足太陽膀胱經","FT","外踝尖正下方的凹陷。","std","足踝痛、失眠","頭痛、暈眩"],
+"丘墟":["GB40","足少陽膽經","FT","外踝前下方的凹陷。","std","足踝扭傷疼痛","脅肋痛"],
+"解谿":["ST41","足陽明胃經","FT","足背與小腿交界的橫紋中央，兩筋之間。","std","足踝痛、踝部無力","頭痛、腹脹"],
+"公孫":["SP4","足太陰脾經","FT","足內側，第 1 蹠骨底前下方，赤白肉交界處。","std","胃痛、嘔吐、腹瀉","經期腹痛"],
+"太衝":["LR3","足厥陰肝經","FT","足背第 1、2 蹠骨結合處前方的凹陷。","std","頭痛、暈眩、高血壓、心煩","目赤、月經不調、易怒"],
+"行間":["LR2","足厥陰肝經","FT","足背第 1、2 趾間，趾蹼緣後方。","std","目赤、口苦、黃帶","頭痛、易怒"],
+"內庭":["ST44","足陽明胃經","FT","足背第 2、3 趾間，趾蹼緣後方。","std","牙痛、口臭、咽喉痛","青春痘、胃火"],
+"湧泉":["KI1","足少陰腎經","FT","足底前 1/3 處，腳趾彎曲時出現的凹陷。","rub","失眠、腳部冰冷、頭頂痛","高血壓、疲勞"],
+"大敦":["LR1","足厥陰肝經","FT","大腳趾外側，趾甲角旁約 0.1 寸。","pinch","疝氣、遺尿","月經過多"],
+"隱白":["SP1","足太陰脾經","FT","大腳趾內側，趾甲角旁約 0.1 寸。","pinch","月經過長、月經提前","多夢"],
+"厲兌":["ST45","足陽明胃經","FT","第 2 腳趾外側，趾甲角旁約 0.1 寸。","pinch","多夢、睡不安穩","牙痛"]
+};
+
+// ---------- 分類與症狀 ----------
+const CATS=[
+ {id:"head",name:"頭面五官",mind:"把注意力放回呼吸，讓臉部、眼周與下巴一起鬆開。"},
+ {id:"sleep",name:"心神睡眠",mind:"今天已經夠努力了，允許自己慢下來，什麼都不必完成。"},
+ {id:"chest",name:"心胸呼吸",mind:"吸氣時想像胸口打開，吐氣時讓肩膀自然下沉。"},
+ {id:"gut",name:"腸胃消化",mind:"細嚼慢嚥，也溫柔對待正在努力工作的腸胃。"},
+ {id:"beauty",name:"美容養顏",mind:"好氣色來自好睡眠與好心情，先照顧心，再照顧臉。"},
+ {id:"meta",name:"代謝泌尿",mind:"規律作息、多喝溫水，身體會慢慢找回自己的節奏。"},
+ {id:"joint",name:"筋骨關節",mind:"疼痛是身體的提醒，按壓時配合吐氣，不和它對抗。"},
+ {id:"body",name:"全身調理",mind:"給身體一點溫暖與耐心，調理是一段持續的過程。"},
+ {id:"women",name:"婦科調理",mind:"跟隨身體的週期，累了就休息，溫暖小腹也溫暖自己。"}
+];
+// [編號, 名稱, 分類, 穴位, 警示等級 u=立即就醫 m=須醫療評估]
+const S=[
+[1,"(目)暈眩","head",["百會","風池","太衝","內關","豐隆"]],
+[2,"失眠","sleep",["神門","安眠","三陰交","湧泉","四神聰"]],
+[3,"咳嗽","chest",["天突","尺澤","肺俞","列缺"]],
+[4,"眼痛","head",["睛明","攢竹","太陽","風池"]],
+[5,"鼻塞","head",["迎香","上星","印堂","合谷"]],
+[6,"口臭","head",["大陵","勞宮","內庭"]],
+[7,"白頭髮","beauty",["百會","腎俞","太溪","血海"]],
+[8,"咽喉腫痛","head",["少商","魚際","天突","照海"]],
+[9,"視物不清","head",["睛明","四白","風池","天柱"]],
+[10,"噁心","gut",["內關","中脘","足三里","公孫"]],
+[11,"口眼歪斜","head",["地倉","頰車","陽白","翳風","合谷"],"m"],
+[12,"煩渴","meta",["太溪","照海","廉泉","勞宮"]],
+[13,"耳鳴","head",["聽宮","翳風","中渚","太溪"]],
+[14,"嘔吐","gut",["內關","中脘","公孫","足三里"]],
+[15,"耳聾","head",["聽宮","翳風","外關","腎俞"],"m"],
+[16,"鼻炎","head",["迎香","印堂","上星","風池"]],
+[17,"目赤(紅眼)","head",["太陽","行間","攢竹","曲池"]],
+[18,"面神經麻痺","head",["陽白","四白","地倉","頰車","翳風"],"m"],
+[19,"黃疸","gut",["至陽","肝俞","陰陵泉","足三里"],"m"],
+[20,"頭痛","head",["太陽","風池","百會","合谷","太衝"]],
+[21,"中耳炎","head",["聽宮","翳風","外關"],"m"],
+[22,"多夢","sleep",["神門","隱白","厲兌","心俞"]],
+[23,"哮喘","chest",["定喘","天突","膻中","肺俞","太淵"],"m"],
+[24,"黑斑、雀斑","beauty",["四白","顴髎","血海","三陰交"]],
+[25,"中風","body",["人中","百會","風池","曲池","足三里"],"u"],
+[26,"耳下腺炎","head",["翳風","頰車","外關","合谷"],"m"],
+[27,"健忘","sleep",["百會","四神聰","心俞","神門"]],
+[28,"牙痛","head",["下關","頰車","合谷","內庭"]],
+[29,"掉髮、禿頭","beauty",["百會","頭維","風池","腎俞"]],
+[30,"失音不語","head",["廉泉","天突","魚際","照海"]],
+[31,"眼病","head",["睛明","承泣","瞳子髎","肝俞"]],
+[32,"心肌梗塞","chest",["內關","郄門","膻中"],"u"],
+[33,"心悸","chest",["內關","神門","膻中","心俞"]],
+[34,"心絞痛","chest",["內關","郄門","膻中"],"u"],
+[35,"心煩","sleep",["勞宮","大陵","太衝","神門"]],
+[36,"心臟不適","chest",["內關","郄門","膻中","心俞"],"m"],
+[37,"心臟病","chest",["內關","心俞","足三里"],"m"],
+[38,"支氣管炎","chest",["肺俞","尺澤","天突","豐隆"]],
+[39,"肝機能衰退","gut",["肝俞","太衝","期門","足三里"],"m"],
+[40,"肥胖","beauty",["天樞","大橫","豐隆","足三里","水分"]],
+[41,"急性腸胃炎","gut",["梁丘","天樞","足三里","內關"]],
+[42,"胃痛","gut",["中脘","梁丘","足三里","內關"]],
+[43,"食慾不振","gut",["中脘","足三里","脾俞","公孫"]],
+[44,"胸悶","chest",["膻中","內關","期門"]],
+[45,"胸膜炎","chest",["膻中","期門","支溝","陽陵泉"],"m"],
+[46,"痢疾","gut",["天樞","上巨虛","曲池","合谷"],"m"],
+[47,"飲食不下","gut",["中脘","膈俞","內關","足三里"]],
+[48,"腹痛","gut",["天樞","足三里","中脘","公孫"]],
+[49,"腹瀉","gut",["天樞","上巨虛","足三里","陰陵泉"]],
+[50,"皮膚炎","beauty",["曲池","血海","風市","膈俞"]],
+[51,"皮膚癢","beauty",["曲池","血海","風市","三陰交"]],
+[52,"青春痘","beauty",["合谷","曲池","內庭","血海"]],
+[53,"發熱","body",["大椎","曲池","合谷","外關"]],
+[54,"瘦臉","beauty",["頰車","顴髎","下關","地倉"]],
+[55,"盜汗","body",["陰郄","復溜","肺俞"]],
+[56,"皮膚光滑","beauty",["足三里","三陰交","血海","曲池"]],
+[57,"秀髮烏黑","beauty",["百會","頭維","腎俞","太溪"]],
+[58,"黑頭粉刺","beauty",["迎香","合谷","曲池","內庭"]],
+[59,"消除眼袋","beauty",["承泣","四白","瞳子髎","陰陵泉"]],
+[60,"嘴唇發乾","beauty",["地倉","承漿","照海","太溪"]],
+[61,"低血壓","meta",["百會","足三里","湧泉","內關"]],
+[62,"尿少","meta",["陰陵泉","中極","水分","三陰交"]],
+[63,"尿多","meta",["關元","腎俞","太溪"]],
+[64,"尿血","meta",["三陰交","血海","腎俞"],"m"],
+[65,"尿路結石","meta",["腎俞","陰陵泉","中極","三陰交"],"m"],
+[66,"尿路感染","meta",["中極","陰陵泉","三陰交","次髎"],"m"],
+[67,"前列腺肥大","meta",["中極","關元","三陰交","陰陵泉"],"m"],
+[68,"高血脂症","meta",["豐隆","足三里","太衝","內關"]],
+[69,"高血壓","meta",["曲池","太衝","風池","湧泉"],"m"],
+[70,"貧血","meta",["足三里","血海","脾俞","膈俞"]],
+[71,"精力減退","meta",["關元","氣海","腎俞","命門","足三里"]],
+[72,"膀胱炎","meta",["中極","陰陵泉","三陰交","次髎"],"m"],
+[73,"糖尿病","meta",["陽池","脾俞","足三里","太溪"],"m"],
+[74,"遺尿","meta",["關元","中極","三陰交","大敦"]],
+[75,"下肢麻痺","joint",["環跳","委中","陽陵泉","懸鐘","風市"]],
+[76,"坐骨神經痛","joint",["環跳","承扶","委中","崑崙","陽陵泉"]],
+[77,"肘(臂)疼痛","joint",["曲池","手三里","尺澤","外關"]],
+[78,"足踝痛","joint",["丘墟","崑崙","解谿","申脈"]],
+[79,"肩背痛","joint",["肩井","天宗","膏肓","後溪"]],
+[80,"肩胛疼痛","joint",["天宗","膏肓","肩貞","後溪"]],
+[81,"肩頸痛","joint",["肩井","風池","天柱","後溪","懸鐘"]],
+[82,"肩關節炎","joint",["肩髃","肩髎","肩貞","陽陵泉"]],
+[83,"背部僵硬","joint",["膏肓","天宗","委中","後溪"]],
+[84,"腰痛","joint",["腎俞","腰眼","委中","腰痛點","大腸俞"]],
+[85,"腳腿痛","joint",["足三里","陽陵泉","承山","委中"]],
+[86,"落枕","joint",["落枕穴","後溪","懸鐘","肩井","列缺"]],
+[87,"膝關節炎","joint",["犢鼻","鶴頂","陽陵泉","陰陵泉","血海"]],
+[88,"膝關節疼痛","joint",["犢鼻","鶴頂","梁丘","委中"]],
+[89,"踝部疼痛","joint",["解谿","丘墟","崑崙","太溪"]],
+[90,"頸項僵硬","joint",["風池","天柱","大椎","後溪","懸鐘"]],
+[91,"關節風濕痛","joint",["曲池","陽陵泉","足三里","外關"]],
+[92,"三叉神經痛","head",["下關","頰車","顴髎","合谷"],"m"],
+[93,"手腕消炎","joint",["陽池","陽溪","大陵","外關"]],
+[94,"水腫","meta",["水分","陰陵泉","復溜","脾俞"]],
+[95,"半身不遂","body",["肩髃","曲池","合谷","環跳","足三里","陽陵泉"],"m"],
+[96,"更年期障礙","women",["三陰交","太衝","神門","太溪"]],
+[97,"抽筋","joint",["承山","陽陵泉","委中"]],
+[98,"疝氣","meta",["大敦","歸來","三陰交"],"m"],
+[99,"便秘","gut",["天樞","支溝","大橫","上巨虛"]],
+[100,"扁桃腺炎","head",["少商","魚際","合谷","天突"]],
+[101,"流行性感冒","body",["風池","大椎","合谷","外關","曲池"]],
+[102,"神經衰弱","sleep",["神門","百會","心俞","三陰交"]],
+[103,"想便便","gut",["天樞","上巨虛","足三里","大腸俞"]],
+[104,"腳氣病","body",["足三里","陰陵泉","懸鐘","三陰交"]],
+[105,"腳部冰冷","body",["湧泉","太溪","命門","足三里"]],
+[106,"熱病汗不出","body",["合谷","復溜","大椎","外關"]],
+[107,"癲狂","sleep",["人中","神門","太衝","大陵"],"m"],
+[108,"癲癇","sleep",["人中","百會","神門"],"m"],
+[109,"月經不調","women",["三陰交","血海","關元","太衝"]],
+[110,"月經痛","women",["地機","三陰交","次髎","關元","合谷"]],
+[111,"安胎","women",["內關","足三里"],"m"],
+[112,"減肥","beauty",["天樞","豐隆","帶脈","足三里"]],
+[113,"月經提前","women",["血海","三陰交","太衝","隱白"]],
+[114,"月經過長","women",["隱白","血海","三陰交","脾俞"]],
+[115,"經期頭痛","women",["太衝","風池","太陽","三陰交"]],
+[116,"經期腹瀉","women",["天樞","足三里","脾俞","公孫"]],
+[117,"白帶","women",["帶脈","陰陵泉","三陰交","次髎"]],
+[118,"水樣帶","women",["帶脈","脾俞","陰陵泉","足三里"]],
+[119,"黃帶","women",["帶脈","陰陵泉","行間","中極"],"m"],
+[120,"膿樣帶","women",["帶脈","中極","陰陵泉","行間"],"m"],
+[121,"陰部痛癢","women",["蠡溝","陰陵泉","三陰交","血海"],"m"],
+[122,"陰部疼痛","women",["蠡溝","太衝","三陰交","中極"],"m"],
+[123,"乳腺炎","women",["膻中","乳根","少澤","肩井","梁丘"],"m"],
+[124,"乳腺增生","women",["膻中","期門","太衝","天宗","乳根"],"m"]
+];
+const NOTE={
+ 25:"出現臉歪、單側手腳無力、說話不清，請立即撥打 119，記下發作時間，不要等待按壓見效。",
+ 32:"胸口壓迫痛、冒冷汗、痛感延伸到左肩或下巴，請立即撥打 119。",
+ 34:"胸痛發作請停止活動、依醫囑用藥，若 5 分鐘未緩解請撥打 119。",
+ 108:"發作中請勿按壓、勿把東西塞進口中；移開周邊危險物、讓患者側躺並記錄時間，超過 5 分鐘請撥打 119。",
+ 111:"懷孕期間請先諮詢婦產科醫師。此處僅列出常用於舒緩孕吐的內關、足三里，力道宜輕；合谷、三陰交、肩井、崑崙及腹部、腰骶穴位孕期應避免按壓。",
+ 11:"突發口眼歪斜需先排除中風，請儘速就醫。"
+};
+const REG={H:"頭面",N:"後頸",T:"喉頸",C:"胸部",A:"腹部",S:"肩部",UB:"上背",LB:"腰背",G:"臀腿",AO:"手臂外側",AI:"前臂內側",HP:"手掌",HB:"手背指端",K:"膝部",KB:"膕窩",LF:"小腿",CB:"小腿後",FT:"足踝"};
+// 人形圖座標：正面 x≈80，背面 x≈240
+const SPOT={H:[80,28],T:[80,58],C:[80,88],A:[80,128],AI:[45,122],HP:[45,166],K:[69,200],LF:[69,232],FT:[69,268],
+ N:[240,50],S:[219,64],UB:[240,92],LB:[240,136],G:[229,166],AO:[205,116],HB:[205,166],KB:[229,202],CB:[229,234]};
+
+// ---------- 穴位位置圖 ----------
+const B='class="fb"', Ln='class="fl"';
+const legIn=`<path ${B} d="M58,0 L138,0 L128,95 Q130,110 124,122 L114,222 L82,222 L76,122 Q70,110 72,95 Z"/><path ${B} d="M78,216 L116,216 Q150,232 176,240 Q184,252 172,258 L70,258 Q64,240 78,216 Z"/><circle ${Ln} cx="98" cy="224" r="5"/><ellipse ${Ln} cx="104" cy="98" rx="12" ry="12"/>`;
+const VIEWS={
+ face:{t:"頭面正面",l:["",""],s:`<ellipse ${B} cx="100" cy="96" rx="62" ry="80"/><ellipse ${B} cx="37" cy="104" rx="9" ry="17"/><ellipse ${B} cx="163" cy="104" rx="9" ry="17"/><rect ${B} x="78" y="165" width="44" height="50"/>
+  <path ${Ln} d="M44,70 Q50,40 100,48 Q150,40 156,70 M62,73 Q75,67 89,71 M111,71 Q125,67 138,73 M100,80 L100,116 M90,120 Q100,126 110,120 M84,141 Q100,149 116,141"/><ellipse ${Ln} cx="75" cy="86" rx="11" ry="5"/><ellipse ${Ln} cx="125" cy="86" rx="11" ry="5"/>`},
+ neck:{t:"頭頸背面",l:["",""],s:`<ellipse ${B} cx="100" cy="62" rx="50" ry="58"/><ellipse ${B} cx="50" cy="70" rx="7" ry="13"/><ellipse ${B} cx="150" cy="70" rx="7" ry="13"/><rect ${B} x="80" y="104" width="40" height="54"/><path ${B} d="M10,215 L14,178 Q22,158 80,152 L120,152 Q178,158 186,178 L190,215 Z"/>
+  <path ${Ln} d="M58,102 Q100,114 142,102" /><path ${Ln} stroke-dasharray="3 4" d="M100,122 L100,212"/>`},
+ torso:{t:"胸腹正面",l:["",""],s:`<circle ${B} cx="30" cy="34" r="20"/><circle ${B} cx="170" cy="34" r="20"/><path ${B} d="M40,16 Q100,8 160,16 L166,60 L152,120 Q150,180 156,235 L44,235 Q50,180 48,120 L34,60 Z"/>
+  <circle ${Ln} cx="72" cy="72" r="3"/><circle ${Ln} cx="128" cy="72" r="3"/><circle ${Ln} cx="100" cy="140" r="3"/><path ${Ln} d="M100,18 L100,82 M100,82 L64,108 M100,82 L136,108"/>`},
+ back:{t:"背部・腰部",l:["",""],s:`<circle ${B} cx="30" cy="30" r="20"/><circle ${B} cx="170" cy="30" r="20"/><path ${B} d="M40,10 Q100,2 160,10 L166,56 L150,128 Q160,180 158,235 L42,235 Q40,180 50,128 L34,56 Z"/>
+  <path ${Ln} stroke-dasharray="3 4" d="M100,8 L100,160"/><path ${Ln} d="M124,40 L158,40 L134,96 Z M76,40 L42,40 L66,96 Z M88,160 L112,160 L100,195 Z"/>`},
+ armIn:{t:"前臂內側・手掌",l:["小指側","拇指側"],s:`<path ${B} d="M68,10 L132,10 L124,152 L76,152 Z"/><rect ${B} x="72" y="148" width="56" height="68" rx="10"/><rect ${B} x="73" y="208" width="11" height="34" rx="5"/><rect ${B} x="86" y="208" width="12" height="44" rx="6"/><rect ${B} x="100" y="208" width="12" height="48" rx="6"/><rect ${B} x="114" y="208" width="12" height="42" rx="6"/><path ${B} d="M122,154 L150,194 Q160,212 146,216 L118,190 Z"/>
+  <path ${Ln} d="M68,22 L132,22 M76,150 L124,150"/>`},
+ armOut:{t:"前臂外側・手背",l:["拇指側","小指側"],s:`<path ${B} d="M68,10 L132,10 L124,152 L76,152 Z"/><rect ${B} x="72" y="148" width="56" height="68" rx="10"/><rect ${B} x="73" y="208" width="12" height="42" rx="6"/><rect ${B} x="87" y="208" width="12" height="48" rx="6"/><rect ${B} x="101" y="208" width="12" height="44" rx="6"/><rect ${B} x="115" y="208" width="11" height="34" rx="5"/><path ${B} d="M78,154 L50,194 Q40,212 54,216 L82,190 Z"/>
+  <path ${Ln} d="M68,24 L132,24 M76,150 L124,150"/>`},
+ legFront:{t:"腿部前外側",l:["內側","外側"],s:`<path ${B} d="M60,0 L142,0 L130,95 Q128,110 124,120 L116,222 L86,222 L78,120 Q72,110 72,95 Z"/><path ${B} d="M84,220 L118,220 Q124,240 132,262 L70,262 Q78,240 84,220 Z"/><ellipse ${Ln} cx="100" cy="98" rx="14" ry="13"/><circle ${Ln} cx="119" cy="224" r="4"/>`},
+ legIn:{t:"小腿內側・足內側",l:["後(跟腱)","前(腳趾)"],s:legIn},
+ legOut:{t:"足踝外側",l:["前(腳趾)","後(跟腱)"],s:`<g transform="translate(200,0) scale(-1,1)">${legIn}</g>`},
+ legBack:{t:"臀部・腿部後側",l:["",""],s:`<path ${B} d="M52,0 L148,0 Q162,30 146,60 L132,128 Q136,150 128,175 L114,240 L88,240 L74,175 Q66,150 68,128 L54,60 Q40,30 52,0 Z"/><ellipse ${B} cx="101" cy="248" rx="14" ry="10"/><path ${Ln} d="M60,56 Q100,68 140,56 M74,130 L128,130"/>`},
+ foot:{t:"足背",l:["大趾側","小趾側"],s:`<path ${B} d="M76,0 L124,0 L126,28 Q150,40 152,120 L150,170 Q148,192 140,194 L60,194 Q52,150 60,110 Q62,60 74,28 Z"/><ellipse ${B} cx="70" cy="206" rx="11" ry="15"/><ellipse ${B} cx="92" cy="208" rx="7" ry="12"/><ellipse ${B} cx="108" cy="206" rx="7" ry="11"/><ellipse ${B} cx="122" cy="203" rx="6" ry="10"/><ellipse ${B} cx="136" cy="198" rx="6" ry="9"/><circle ${Ln} cx="130" cy="28" r="6"/><circle ${Ln} cx="72" cy="24" r="6"/>`},
+ sole:{t:"足底",l:["",""],s:`<ellipse ${B} cx="80" cy="44" rx="10" ry="12"/><ellipse ${B} cx="99" cy="38" rx="7" ry="9"/><ellipse ${B} cx="114" cy="40" rx="6" ry="8"/><ellipse ${B} cx="127" cy="45" rx="6" ry="8"/><ellipse ${B} cx="138" cy="54" rx="5" ry="7"/><path ${B} d="M70,60 Q100,48 136,62 Q150,100 138,150 Q132,200 120,236 Q100,254 80,236 Q70,200 66,150 Q56,100 70,60 Z"/>`}
+};
+const PV={
+ "百會":["face",[[100,19]]],"四神聰":["face",[[86,26],[114,26]]],"神庭":["face",[[100,44]]],"上星":["face",[[100,35]]],"印堂":["face",[[100,73]]],"頭維":["face",[[142,50]]],"陽白":["face",[[125,58]]],"攢竹":["face",[[112,71]]],"絲竹空":["face",[[139,72]]],"太陽":["face",[[150,84]]],"睛明":["face",[[110,84]]],"承泣":["face",[[125,93]]],"四白":["face",[[125,102]]],"瞳子髎":["face",[[141,87]]],"迎香":["face",[[115,118]]],"顴髎":["face",[[138,112]]],"地倉":["face",[[122,142]]],"頰車":["face",[[142,148]]],"下關":["face",[[152,110]]],"聽宮":["face",[[155,104]]],"翳風":["face",[[160,126]]],"人中":["face",[[100,128]]],"承漿":["face",[[100,156]]],"廉泉":["face",[[100,180]]],
+ "安眠":["neck",[[134,98]]],"風池":["neck",[[80,108],[120,108]]],"天柱":["neck",[[91,118],[109,118]]],"大椎":["neck",[[100,156]]],"定喘":["neck",[[92,156],[108,156]]],"肩井":["neck",[[52,166],[148,166]]],
+ "天突":["torso",[[100,20]]],"膻中":["torso",[[100,72]]],"乳根":["torso",[[128,86]]],"期門":["torso",[[128,100]]],"中脘":["torso",[[100,110]]],"水分":["torso",[[100,132]]],"天樞":["torso",[[85,140],[115,140]]],"大橫":["torso",[[70,140],[130,140]]],"氣海":["torso",[[100,151]]],"關元":["torso",[[100,162]]],"中極":["torso",[[100,171]]],"歸來":["torso",[[85,171],[115,171]]],"帶脈":["torso",[[148,140]]],"肩髃":["torso",[[176,30]]],
+ "天宗":["back",[[142,60]]],"膏肓":["back",[[128,50]]],"肺俞":["back",[[84,40],[116,40]]],"心俞":["back",[[116,56]]],"至陽":["back",[[100,72]]],"膈俞":["back",[[116,72]]],"肝俞":["back",[[116,88]]],"脾俞":["back",[[116,104]]],"腎俞":["back",[[84,128],[116,128]]],"命門":["back",[[100,128]]],"大腸俞":["back",[[116,144]]],"腰眼":["back",[[136,146]]],"次髎":["back",[[90,172],[110,172]]],"肩貞":["back",[[160,64]]],"肩髎":["back",[[176,38]]],
+ "尺澤":["armIn",[[114,22]]],"郄門":["armIn",[[100,96]]],"內關":["armIn",[[100,128]]],"列缺":["armIn",[[121,134]]],"陰郄":["armIn",[[83,143]]],"神門":["armIn",[[82,150]]],"大陵":["armIn",[[100,150]]],"太淵":["armIn",[[119,150]]],"勞宮":["armIn",[[94,188]]],"魚際":["armIn",[[130,178]]],"少商":["armIn",[[151,206]]],
+ "曲池":["armOut",[[72,24]]],"手三里":["armOut",[[76,46]]],"支溝":["armOut",[[100,116]]],"外關":["armOut",[[100,128]]],"陽溪":["armOut",[[80,150]]],"陽池":["armOut",[[108,150]]],"合谷":["armOut",[[72,186]]],"中渚":["armOut",[[113,200]]],"後溪":["armOut",[[127,206]]],"落枕穴":["armOut",[[93,204]]],"腰痛點":["armOut",[[93,182],[113,182]]],"少澤":["armOut",[[124,240]]],
+ "風市":["legFront",[[134,40]]],"梁丘":["legFront",[[118,72]]],"鶴頂":["legFront",[[100,84]]],"犢鼻":["legFront",[[110,112]]],"陽陵泉":["legFront",[[124,124]]],"足三里":["legFront",[[113,134]]],"上巨虛":["legFront",[[113,155]]],"豐隆":["legFront",[[117,168]]],"懸鐘":["legFront",[[114,201]]],"解谿":["legFront",[[100,228]]],
+ "血海":["legIn",[[96,74]]],"陰陵泉":["legIn",[[86,122]]],"地機":["legIn",[[88,143]]],"蠡溝":["legIn",[[100,188]]],"三陰交":["legIn",[[90,203]]],"復溜":["legIn",[[86,212]]],"太溪":["legIn",[[86,227]]],"照海":["legIn",[[98,236]]],"公孫":["legIn",[[132,246]]],"隱白":["legIn",[[174,246]]],
+ "崑崙":["legOut",[[116,226]]],"申脈":["legOut",[[102,237]]],"丘墟":["legOut",[[88,233]]],
+ "環跳":["legBack",[[140,26]]],"承扶":["legBack",[[100,62]]],"委中":["legBack",[[100,130]]],"承山":["legBack",[[101,184]]],
+ "太衝":["foot",[[82,128]]],"行間":["foot",[[81,190]]],"內庭":["foot",[[100,190]]],"厲兌":["foot",[[98,216]]],"大敦":["foot",[[78,216]]],
+ "湧泉":["sole",[[100,112]]]
+};
+const MIDLINE=["督脈","任脈"];
+const bilateral=n=>!MIDLINE.includes(P[n][1])&&!["印堂","人中"].includes(n);
+function diagram(name){
+  const [v,pts]=PV[name], V=VIEWS[v];
+  const [lx,ly]=pts[0], right=lx>128;
+  const dots=pts.map(([x,y])=>`<circle class="pulse" cx="${x}" cy="${y}" r="7"/><circle class="dot" cx="${x}" cy="${y}" r="5.5"/>`).join("");
+  return `<svg viewBox="0 0 200 270" role="img" aria-label="${name}穴位置：${V.t}">
+    ${V.s}${dots}
+    <text class="plbl" x="${right?lx-11:lx+11}" y="${ly+6}" text-anchor="${right?"end":"start"}">${name}</text>
+    <text class="side" x="6" y="266">${V.l[0]}</text><text class="side" x="194" y="266" text-anchor="end">${V.l[1]}</text></svg>`;
+}
+
+// ---------- 狀態 ----------
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let sel=new Set(store.get("acu.sel",[2,20,81]));
+let preg=store.get("acu.preg",false);
+let cat="all", q="";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const symById=Object.fromEntries(S.map(s=>[s[0],s]));
+const catById=Object.fromEntries(CATS.map(c=>[c.id,c]));
+
+function renderTabs(){
+  const all=[{id:"all",name:"全部"},...CATS];
+  $("#tabs").innerHTML=all.map(c=>{const n=c.id==="all"?S.length:S.filter(s=>s[2]===c.id).length;
+    return `<button class="tab" role="tab" aria-selected="${cat===c.id}" data-c="${c.id}">${c.name}<small>${n}</small></button>`}).join("");
+}
+function renderChips(){
+  const list=S.filter(s=>(cat==="all"||s[2]===cat)&&(!q||s[1].includes(q)));
+  $("#chips").innerHTML=list.length?list.map(s=>`<button class="chip" aria-pressed="${sel.has(s[0])}" data-id="${s[0]}"><span class="n">${s[0]}</span><span>${esc(s[1])}</span>${s[4]?'<span class="flag" title="須就醫評估"></span>':""}</button>`).join(""):`<div class="empty-search">找不到「${esc(q)}」，試試其他關鍵字，或切換到「全部」。</div>`;
+  updateBar();
+}
+function updateBar(){
+  const names=[...sel].sort((a,b)=>a-b).map(i=>symById[i][1]);
+  $("#selText").innerHTML=names.length?`已選 <b>${names.length}</b> 項：${esc(names.join("、"))}`:"尚未選取症狀";
+  $("#show").disabled=!names.length;
+  store.set("acu.sel",[...sel]);
+}
+const avoid=name=>preg&&P[name][7]===1;
+
+function figure(points){
+  const counts={};points.forEach(([n,c])=>{if(avoid(n))return;const r=P[n][2];counts[r]=(counts[r]||0)+c});
+  const body=ox=>`<g fill="var(--figure)">
+    <circle cx="${ox+80}" cy="28" r="17"/><rect x="${ox+73}" y="44" width="14" height="12" rx="3"/>
+    <rect x="${ox+56}" y="54" width="48" height="100" rx="16"/>
+    <rect x="${ox+38}" y="60" width="14" height="96" rx="7"/><rect x="${ox+108}" y="60" width="14" height="96" rx="7"/>
+    <ellipse cx="${ox+45}" cy="166" rx="7" ry="10"/><ellipse cx="${ox+115}" cy="166" rx="7" ry="10"/>
+    <rect x="${ox+60}" y="148" width="18" height="118" rx="8"/><rect x="${ox+82}" y="148" width="18" height="118" rx="8"/>
+    <ellipse cx="${ox+69}" cy="272" rx="11" ry="5"/><ellipse cx="${ox+91}" cy="272" rx="11" ry="5"/></g>`;
+  const max=Math.max(1,...Object.values(counts));
+  const dots=Object.entries(counts).map(([r,c])=>{const [x,y]=SPOT[r];const rad=5+6*c/max;
+    return `<circle cx="${x}" cy="${y}" r="${rad+5}" fill="var(--ochre)" opacity=".18"/><circle cx="${x}" cy="${y}" r="${rad}" fill="var(--ochre)"><title>${REG[r]}：${c} 次</title></circle>`}).join("");
+  return `<svg viewBox="0 0 320 300" role="img" aria-label="穴位分布人形圖">
+    ${body(0)}${body(160)}${dots}
+    <text x="80" y="296" text-anchor="middle" font-size="12" fill="var(--muted)">正面</text>
+    <text x="240" y="296" text-anchor="middle" font-size="12" fill="var(--muted)">背面</text></svg>`;
+}
+
+function card(name){
+  const p=P[name], a=avoid(name);
+  return `<article class="pt${a?" avoid":""}">
+    <figure class="pt-fig">${diagram(name)}<figcaption>${VIEWS[PV[name][0]].t}${bilateral(name)?"・左右各一":""}</figcaption></figure>
+    <div class="pt-body">
+    <div class="pt-top"><h4>${name}</h4><span class="code">${p[0]}・${p[1]}</span></div>
+    ${a?'<span class="badge-avoid">孕期避免按壓</span>':""}
+    <dl><dt>取穴</dt><dd>${p[3]}</dd><dt>手法</dt><dd>${M[p[4]]}</dd><dt>主治</dt><dd>${p[5]}</dd><dt>連帶</dt><dd>${p[6]}</dd></dl>
+    <button class="go" data-pt="${name}" ${a?"disabled":""}>跟著按 ▸</button></div></article>`;
+}
+
+function renderResults(){
+  const ids=[...sel].sort((a,b)=>a-b);
+  if(!ids.length){$("#results").innerHTML="";return}
+  const syms=ids.map(i=>symById[i]);
+  const cnt={};syms.forEach(s=>s[3].forEach(n=>cnt[n]=(cnt[n]||0)+1));
+  const pts=Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
+  const usable=pts.filter(([n])=>!avoid(n));
+  const urgent=syms.filter(s=>s[4]==="u"), med=syms.filter(s=>s[4]==="m");
+  const pregHit=preg?pts.filter(([n])=>avoid(n)).map(([n])=>n):[];
+  let h="";
+  if(urgent.length) h+=`<div class="alert urgent"><b>緊急狀況請先就醫：</b>${urgent.map(s=>s[1]).join("、")}<ul>${urgent.map(s=>NOTE[s[0]]?`<li>${NOTE[s[0]]}</li>`:"").join("")}</ul></div>`;
+  if(med.length) h+=`<div class="alert medical"><b>建議由醫師評估：</b>${med.map(s=>s[1]).join("、")}。指壓僅作為放鬆輔助，請持續原有治療與用藥。${med.some(s=>NOTE[s[0]])?`<ul>${med.filter(s=>NOTE[s[0]]).map(s=>`<li>${NOTE[s[0]]}</li>`).join("")}</ul>`:""}</div>`;
+  if(pregHit.length) h+=`<div class="alert preg"><b>孕期模式：</b>已標示 ${pregHit.join("、")} 為孕期避免按壓，處方與人形圖已排除。</div>`;
+  h+=`<section class="panel rx"><div>
+      <h2>今日指壓處方</h2>
+      <p class="sub">${syms.length} 項症狀，共 ${usable.length} 個穴位；數字代表該穴同時對應幾項症狀，建議優先按壓。每次 10–15 分鐘，一天 1–2 次。</p>
+      <div class="rx-list">${pts.map(([n,c])=>`<button class="pt-chip${avoid(n)?" avoid":""}" data-pt="${n}" ${avoid(n)?"disabled":""}><b>${n}</b><span class="cnt">${c}</span></button>`).join("")}</div>
+      <div class="rx-actions"><button class="btn" id="copy">複製處方文字</button>${usable.length?`<button class="btn primary" data-pt="${usable[0][0]}">從「${usable[0][0]}」開始按</button>`:""}</div>
+    </div>
+    <div class="figure-box">${figure(pts)}<div class="cap">橘點越大，代表該部位需按壓的穴位越多</div></div></section>`;
+  h+=syms.map(s=>`<section class="sym" id="sym-${s[0]}">
+      <div class="sym-head"><span class="num">No.${s[0]}</span><h3>${esc(s[1])}</h3><span class="cat">${catById[s[2]].name}</span></div>
+      <p class="mind">${catById[s[2]].mind}</p>
+      <div class="cards">${s[3].map(card).join("")}</div></section>`).join("");
+  $("#results").innerHTML=h;
+}
+
+function rxText(){
+  const ids=[...sel].sort((a,b)=>a-b);const cnt={};
+  ids.forEach(i=>symById[i][3].forEach(n=>cnt[n]=(cnt[n]||0)+1));
+  return `【身心靈指壓舒壓處方】\n症狀：${ids.map(i=>symById[i][1]).join("、")}\n\n`+
+    Object.entries(cnt).sort((a,b)=>b[1]-a[1]).filter(([n])=>!avoid(n)).map(([n])=>`● ${n}（${REG[P[n][2]]}）：${P[n][3]}\n  手法：${M[P[n][4]]}`).join("\n")+
+    `\n\n※ 居家保健參考，不能取代醫療診斷。`;
+}
+function toast(t){const d=document.createElement("div");d.className="toast";d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1800)}
+
+// ---------- 指壓節拍器 ----------
+let timer=null, st=null;
+function openTimer(name){
+  const p=P[name];stopTimer();
+  $("#m-name").textContent=name;
+  $("#m-where").textContent=`${REG[p[2]]}｜${p[3]}`;
+  $("#m-fig").innerHTML=diagram(name);
+  st={round:0,phase:"idle",left:0,total:10};
+  paint();$("#modal").hidden=false;$("#m-start").focus();
+}
+function paint(){
+  const ring=$("#ring"),ph=$("#m-phase");
+  ring.classList.toggle("press",st.phase==="press");
+  if(st.phase==="idle"){ph.innerHTML="準備<small>找到穴位，按下開始</small>";$("#m-start").textContent="開始"}
+  else if(st.phase==="press"){ph.innerHTML="按壓<small>慢慢吐氣</small>"}
+  else if(st.phase==="rest"){ph.innerHTML="放鬆<small>輕輕吸氣</small>"}
+  else if(st.phase==="done"){ph.innerHTML="完成<small>換下一個穴位吧</small>";$("#m-start").textContent="再來一次"}
+  $("#m-count").textContent=`第 ${st.round} / ${st.total} 回`;
+  $("#m-sec").textContent=st.left?`${st.left} 秒`:"—";
+}
+function tick(){
+  st.left--;
+  if(st.left<=0){
+    if(st.phase==="press"){st.phase="rest";st.left=2}
+    else{ if(st.round>=st.total){st.phase="done";st.left=0;stopTimer();paint();return}
+      st.round++;st.phase="press";st.left=5}
+  }
+  paint();
+}
+function startTimer(){
+  if(timer){stopTimer();$("#m-start").textContent="繼續";return}
+  if(st.phase==="idle"||st.phase==="done"){st.round=1;st.phase="press";st.left=5}
+  $("#m-start").textContent="暫停";paint();timer=setInterval(tick,1000);
+  try{navigator.wakeLock&&navigator.wakeLock.request("screen").catch(()=>{})}catch(e){}
+}
+function stopTimer(){clearInterval(timer);timer=null}
+
+// ---------- 事件 ----------
+$("#tabs").addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b)return;cat=b.dataset.c;renderTabs();renderChips()});
+$("#chips").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;const id=+b.dataset.id;sel.has(id)?sel.delete(id):sel.add(id);b.setAttribute("aria-pressed",sel.has(id));updateBar()});
+$("#q").addEventListener("input",e=>{q=e.target.value.trim();if(q)cat="all";renderTabs();renderChips()});
+$("#preg").checked=preg;
+$("#preg").addEventListener("change",e=>{preg=e.target.checked;store.set("acu.preg",preg);renderResults()});
+$("#reset").addEventListener("click",()=>{sel.clear();renderChips();renderResults();window.scrollTo({top:0,behavior:"smooth"})});
+$("#show").addEventListener("click",()=>{renderResults();$("#results").scrollIntoView({behavior:"smooth"})});
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-pt]");if(b&&!b.disabled){openTimer(b.dataset.pt);return}
+  if(e.target.id==="copy"){const t=rxText();
+    navigator.clipboard.writeText(t).then(()=>toast("已複製處方")).catch(()=>{const ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast("已複製處方")}catch(_){toast("請手動選取複製")}ta.remove()})}
+});
+$("#m-start").addEventListener("click",startTimer);
+$("#m-close").addEventListener("click",()=>{stopTimer();$("#modal").hidden=true});
+$("#modal").addEventListener("click",e=>{if(e.target.id==="modal"){stopTimer();$("#modal").hidden=true}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#modal").hidden){stopTimer();$("#modal").hidden=true}});
+
+renderTabs();renderChips();renderResults();
+</script>
+
+</body>
+</html>
